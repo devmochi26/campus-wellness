@@ -3,12 +3,14 @@ import { useAuth } from '../context/AuthContext'
 
 const navItems = [
   { to: '/', label: '今日概览', icon: '🏠' },
-  { to: '/routine', label: '作息记录', icon: '🌙' },
-  { to: '/diet', label: '饮食记录', icon: '🍽️' },
-  { to: '/exercise', label: '运动记录', icon: '🏃' },
+  { to: '/routine', label: '作息管理', icon: '🌙' },
+  { to: '/diet', label: '饮食管理', icon: '🍽️' },
+  { to: '/exercise', label: '运动管理', icon: '🏃' },
   { to: '/mood', label: '心情记录', icon: '💭' },
-  { to: '/constitution', label: '体质测评', icon: '🔬' },
+  { to: '/assessment', label: '健康测评', icon: '🔬' },
   { to: '/habits', label: '习惯打卡', icon: '✅' },
+  { to: '/health', label: '健康档案', icon: '📋' },
+  { to: '/community', label: '校园互助', icon: '🤝' },
 ]
 
 export default function Layout({ children }) {
@@ -29,7 +31,7 @@ export default function Layout({ children }) {
             <span className="font-bold text-lg text-primary-700">养生校园</span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500">{user?.nickname || ''}</span>
+            <span className="text-sm text-gray-500 hidden sm:inline">{user?.nickname || ''}</span>
             <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-gray-600">
               退出
             </button>
@@ -59,19 +61,19 @@ export default function Layout({ children }) {
         </nav>
 
         {/* Mobile bottom nav */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex justify-around py-2 z-10">
-          {navItems.slice(0, 5).map((item) => (
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 flex overflow-x-auto gap-0.5 py-1.5 px-1 z-10">
+          {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.to === '/'}
               className={({ isActive }) =>
-                `flex flex-col items-center gap-0.5 text-xs px-2 py-1 rounded-lg ${
+                `flex flex-col items-center gap-0.5 text-xs px-1.5 py-1 rounded-lg shrink-0 min-w-[3.5rem] ${
                   isActive ? 'text-primary-600' : 'text-gray-400'
                 }`
               }
             >
-              <span className="text-lg">{item.icon}</span>
+              <span className="text-base">{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
           ))}

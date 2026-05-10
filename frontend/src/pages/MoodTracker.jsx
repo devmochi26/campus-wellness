@@ -79,7 +79,7 @@ export default function MoodTracker() {
       <div className="card text-center">
         <div className="text-5xl mb-2">{MOOD_EMOJIS[moodScore]}</div>
         <div className="text-sm text-gray-500 mb-3">{MOOD_LABELS[moodScore]}</div>
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-1 sm:gap-2">
           {[1, 2, 3, 4, 5].map((n) => (
             <button key={n} type="button"
               onClick={() => setMoodScore(n)}

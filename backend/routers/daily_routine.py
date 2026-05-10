@@ -19,8 +19,11 @@ def create_routine(data: RoutineCreate, current_user: User = Depends(get_current
 
     if existing:
         for key, value in data.model_dump().items():
-            if key != "date":
-                setattr(existing, key, value)
+            if key == "date":
+                continue
+            if key in ("wake_time", "sleep_time") and value:
+                value = datetime.time.fromisoformat(value)
+            setattr(existing, key, value)
         db.commit()
         db.refresh(existing)
         return existing

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import api from '../api'
 
 function today() {
@@ -163,26 +164,19 @@ export default function DailyRoutine() {
         )
       })()}
 
-      {/* Weekly overview */}
+      {/* Weekly chart */}
       {weekly.length > 0 && (
         <div className="card">
-          <h3 className="text-sm font-medium text-gray-500 mb-3">本周睡眠质量</h3>
-          <div className="flex gap-2">
-            {weekly.map((d) => (
-              <div key={d.date} className="flex-1 text-center">
-                <div className={`h-12 rounded-lg flex items-end justify-center pb-1 text-xs ${
-                  d.sleep_quality >= 4 ? 'bg-purple-100 text-purple-700' :
-                  d.sleep_quality >= 2 ? 'bg-gray-100 text-gray-600' :
-                  'bg-rose-100 text-rose-600'
-                }`}>
-                  {d.sleep_quality || '-'}
-                </div>
-                <div className="text-xs text-gray-400 mt-1">
-                  {d.date.slice(5)}
-                </div>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-sm font-medium text-gray-500 mb-3">本周睡眠质量趋势</h3>
+          <ResponsiveContainer width="100%" height={160}>
+            <LineChart data={weekly.map((d) => ({ date: d.date?.slice(5) || d.date, quality: d.sleep_quality }))}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} />
+              <YAxis domain={[0, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11 }} />
+              <Tooltip formatter={(v) => [`${v}/5`, '睡眠质量']} />
+              <Line type="monotone" dataKey="quality" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 4 }} name="睡眠质量" />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       )}
     </div>

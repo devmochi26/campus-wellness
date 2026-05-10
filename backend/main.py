@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import auth, user, daily_routine, diet, exercise, mood, constitution, habits, dashboard
+from routers import auth, user, daily_routine, diet, exercise, mood, constitution, habits, dashboard, smart_sleep, nutrition, stress_relief, health_profile, community
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,6 +24,11 @@ app.include_router(mood.router)
 app.include_router(constitution.router)
 app.include_router(habits.router)
 app.include_router(dashboard.router)
+app.include_router(smart_sleep.router)
+app.include_router(nutrition.router)
+app.include_router(stress_relief.router)
+app.include_router(health_profile.router)
+app.include_router(community.router)
 
 
 @app.get("/")

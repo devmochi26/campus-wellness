@@ -55,7 +55,7 @@ export default function DietTracker() {
       </div>
 
       {/* Summary */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
         {MEAL_TYPES.map((mt) => {
           const meals = records.filter((r) => r.meal_type === mt.key)
           return (
@@ -72,11 +72,11 @@ export default function DietTracker() {
       {/* Add form */}
       {showForm && (
         <form onSubmit={handleSubmit} className="card space-y-3">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {MEAL_TYPES.map((mt) => (
               <button key={mt.key} type="button"
                 onClick={() => set('meal_type', mt.key)}
-                className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm transition-colors ${
                   form.meal_type === mt.key ? 'bg-primary-500 text-white' : 'bg-gray-100 text-gray-600'
                 }`}
               >{mt.icon} {mt.label}</button>

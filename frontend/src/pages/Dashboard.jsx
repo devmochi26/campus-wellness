@@ -48,7 +48,7 @@ export default function Dashboard() {
       <h2 className="text-lg font-semibold text-gray-700">📊 今日概览</h2>
 
       {/* Wellness Score */}
-      <div className="card flex items-center gap-4">
+      <div className="card flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
         <ProgressRing value={wellness_score} label="养生分" color={getScoreColor(wellness_score)} size={90} />
         <div>
           <div className="text-lg font-semibold text-gray-700">{getScoreLabel(wellness_score)}</div>

@@ -68,7 +68,7 @@ export default function ExerciseTracker() {
         <form onSubmit={handleSubmit} className="card space-y-3">
           <div>
             <label className="text-sm text-gray-500 block mb-1">运动类型</label>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 sm:gap-2">
               {EXERCISE_TYPES.map((et) => (
                 <button key={et.key} type="button"
                   onClick={() => set('exercise_type', et.key)}

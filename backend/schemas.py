@@ -187,6 +187,38 @@ class HabitResponse(BaseModel):
         from_attributes = True
 
 
+# ===== Smart Sleep =====
+class SleepPreferenceCreate(BaseModel):
+    chronotype: str = "middle"
+    nap_duration: int = 20
+    target_sleep_hours: float = 7.5
+
+
+class SleepPreferenceResponse(BaseModel):
+    id: int
+    chronotype: str
+    nap_duration: int
+    target_sleep_hours: float
+
+    class Config:
+        from_attributes = True
+
+
+class SleepRecommendation(BaseModel):
+    wake_time: str
+    target_bedtime: str
+    nap_time: str
+    nap_duration: int
+    recommendation: str
+
+
+class SleepReport(BaseModel):
+    avg_sleep_hours: float
+    avg_quality: float
+    regularity: float
+    trend: List[dict]
+
+
 # ===== Dashboard =====
 class DashboardToday(BaseModel):
     date: DateStr

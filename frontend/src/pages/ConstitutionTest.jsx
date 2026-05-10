@@ -101,11 +101,11 @@ export default function ConstitutionTest() {
                   <span className="text-gray-400 mr-1">{q.id}.</span>
                   {q.text}
                 </div>
-                <div className="flex gap-2">
+                <div className="grid grid-cols-3 sm:flex gap-1 sm:gap-2">
                   {ANSWER_OPTIONS.map((opt) => (
                     <button key={opt.value} type="button"
                       onClick={() => setAnswer(q.id, opt.value)}
-                      className={`flex-1 py-1.5 rounded-lg text-xs transition-colors ${
+                      className={`py-1.5 rounded-lg text-xs transition-colors text-center ${
                         answers[q.id] === opt.value
                           ? 'bg-primary-500 text-white'
                           : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
