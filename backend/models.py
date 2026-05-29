@@ -1,7 +1,11 @@
-import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, Float, Date, Time, DateTime, ForeignKey, JSON, Boolean
 from sqlalchemy.orm import relationship
 from database import Base
+
+
+def _utcnow():
+    return datetime.now(timezone.utc)
 
 
 class User(Base):
@@ -10,7 +14,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, index=True, nullable=False)
     password_hash = Column(String(128), nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    role = Column(String(20), default="student")  # student / counselor
+    created_at = Column(DateTime, default=_utcnow)
 
     profile = relationship("UserProfile", back_populates="user", uselist=False, cascade="all, delete-orphan")
     routines = relationship("DailyRoutine", back_populates="user", cascade="all, delete-orphan")
@@ -31,6 +36,7 @@ class UserProfile(Base):
     age = Column(Integer, default=20)
     height = Column(Float, default=170.0)
     weight = Column(Float, default=65.0)
+    class_name = Column(String(50), default="")  # 班级名称
 
     user = relationship("User", back_populates="profile")
 
@@ -116,7 +122,7 @@ class Habit(Base):
     category = Column(String(50), default="other")
     target_days = Column(Integer, default=21)
     is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
 
     user = relationship("User", back_populates="habits")
     checkins = relationship("HabitCheckin", back_populates="habit", cascade="all, delete-orphan")
@@ -128,7 +134,7 @@ class HabitCheckin(Base):
     id = Column(Integer, primary_key=True, index=True)
     habit_id = Column(Integer, ForeignKey("habits.id"), nullable=False)
     date = Column(Date, nullable=False)
-    checked_at = Column(DateTime, default=datetime.datetime.utcnow)
+    checked_at = Column(DateTime, default=_utcnow)
 
     habit = relationship("Habit", back_populates="checkins")
 
@@ -150,13 +156,14 @@ class CanteenFood(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
-    category = Column(String(50), nullable=False)  # 主食/荤菜/素菜/汤粥/小吃
+    category = Column(String(50), nullable=False)
     calories = Column(Integer, default=0)
     protein = Column(Float, default=0)
     fat = Column(Float, default=0)
     carbs = Column(Float, default=0)
     healthy_score = Column(Integer, default=3)
-    suitable_for = Column(JSON, default=list)  # [养胃, 护眼, 减脂, 增肌, 经期, 熬夜修复]
+    suitable_for = Column(JSON, default=list)
+    region = Column(String(10), default="通用")  # 北方 / 南方 / 通用
 
 
 class MealPlan(Base):
@@ -193,7 +200,7 @@ class Group(Base):
     type = Column(String(50), default="dorm")
     invite_code = Column(String(20), unique=True, nullable=False)
     creator_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
 
     creator = relationship("User", foreign_keys=[creator_id])
     members = relationship("GroupMember", back_populates="group", cascade="all, delete-orphan")
@@ -205,7 +212,7 @@ class GroupMember(Base):
     id = Column(Integer, primary_key=True, index=True)
     group_id = Column(Integer, ForeignKey("groups.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    joined_at = Column(DateTime, default=datetime.datetime.utcnow)
+    joined_at = Column(DateTime, default=_utcnow)
 
     group = relationship("Group", back_populates="members")
     user = relationship("User")
@@ -219,6 +226,33 @@ class WellnessPost(Base):
     content = Column(String(1000), nullable=False)
     is_anonymous = Column(Boolean, default=False)
     tags = Column(JSON, default=list)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
+
+    user = relationship("User")
+
+
+class CourseSchedule(Base):
+    __tablename__ = "course_schedules"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    day_of_week = Column(Integer, nullable=False)  # 1=周一...7=周日
+    course_name = Column(String(100), nullable=False)
+    start_time = Column(String(10), nullable=False)  # HH:MM
+    end_time = Column(String(10), nullable=False)
+    has_pe = Column(Boolean, default=False)  # 是否体育课
+    location = Column(String(100), default="")
+
+    user = relationship("User")
+
+
+class HealthPoints(Base):
+    __tablename__ = "health_points"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), unique=True, nullable=False)
+    total_points = Column(Integer, default=0)
+    weekly_points = Column(Integer, default=0)
+    last_week_reset = Column(Date, default=_utcnow)
 
     user = relationship("User")

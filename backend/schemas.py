@@ -18,6 +18,7 @@ OptStr = Annotated[Optional[str], BeforeValidator(lambda v: _serialize(v) if v i
 class UserRegister(BaseModel):
     username: str
     password: str
+    class_name: str = ""
 
 
 class UserLogin(BaseModel):

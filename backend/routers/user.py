@@ -8,6 +8,17 @@ from auth import get_current_user
 router = APIRouter(prefix="/api/user", tags=["user"])
 
 
+@router.get("/me")
+def get_me(current_user: User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "username": current_user.username,
+        "role": current_user.role,
+        "nickname": current_user.profile.nickname if current_user.profile else "",
+        "class_name": current_user.profile.class_name if current_user.profile else "",
+    }
+
+
 @router.get("/profile", response_model=ProfileResponse)
 def get_profile(current_user: User = Depends(get_current_user)):
     return current_user.profile
