@@ -3,7 +3,7 @@ export async function onRequest(context) {
   const url = new URL(request.url);
 
   if (url.pathname.startsWith('/api/')) {
-    url.hostname = 'campus-wellness-api.onrender.com';
+    url.hostname = 'campus-wellness-1bsj.onrender.com';
     url.port = '';
 
     const proxyRequest = new Request(url.toString(), {
